@@ -6,6 +6,7 @@
 
 int main();
 void key_callback(GLFWwindow*, int, int, int, int);
+void draw_cube(float);
 void display(GLFWwindow*);
 
 #endif //PROGRAM_MAIN_H

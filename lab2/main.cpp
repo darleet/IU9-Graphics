@@ -1,18 +1,11 @@
 #include "main.h"
 #include <cmath>
 
-int width = 900;
-int height = 900;
-float alpha = 0;
-float beta = 0;
+int width = 750;
+int height = 750;
+float alpha = 0.7f;
+float beta = 0.8f;
 bool fill = true;
-
-float theta = 0.61557763;
-float phi = 0.785398;
-float fz = 0;
-
-const float x = 0.7;
-const float y = 0.7;
 
 using std::sin, std::cos;
 
@@ -66,14 +59,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-GLfloat projMatrix[] = {
-        1, 0, 0, 0.8,
-        0, 1, 0, 0.8,
-        0, 0, 1, 1.5,
-        0, 0, 0, 1
-};
-
-void cube(float p) {
+void draw_cube(float p) {
     glBegin(GL_QUADS);
     glColor3f(0.0, 0.0, 1.0);
     glVertex3f(-p/2, -p/2, -p/2);
@@ -108,6 +94,27 @@ void cube(float p) {
     glEnd();
 }
 
+GLfloat proj[] = {
+        1, 0, 0, 0.8,
+        0, 1, 0, 0.8,
+        0, 0, 1, 0.8,
+        0, 0, 0, 1
+};
+
+GLfloat trans1[] = {
+        1, 0, 0, 0,
+        0, 1, 0,0,
+        0, 0, 1, 0,
+        -0.5, -0.5, 0, 1
+};
+
+GLfloat trans2[] = {
+        1, 0, 0, 0,
+        0, 1, 0,0,
+        0, 0, 1, 0,
+        0.5, 0.5, 0, 1
+};
+
 void display(GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -117,44 +124,44 @@ void display(GLFWwindow* window) {
     glPushMatrix();
     glMatrixMode(GL_PROJECTION);
 
-    GLfloat transMatrix[] = {
-            1, 0, 0, 0,
-            0, 1, 0,0,
-            0, 0, 1, 0,
-            -0.5, -0.5, 0, 1
-    };
-    glMultMatrixf(transMatrix);
-    glMultMatrixf(projMatrix);
-    GLfloat rotX[] = {
+    glMultMatrixf(trans1);
+    glMultMatrixf(proj);
+    GLfloat rotX1[] = {
             1, 0, 0, 0,
             0, cos(alpha), -sin(alpha), 0,
             0, sin(alpha), cos(alpha), 0,
             0, 0, 0, 1
     };
-    GLfloat rotY[] = {
+    GLfloat rotY1[] = {
             cos(beta), 0, sin(beta), 0,
             0, 1, 0, 0,
             -sin(beta), 0, cos(beta), 0,
             0, 0, 0, 1
     };
-    glMultMatrixf(rotX);
-    glMultMatrixf(rotY);
-    cube(0.2);
+    glMultMatrixf(rotX1);
+    glMultMatrixf(rotY1);
+    draw_cube(0.3);
     glPopMatrix();
 
     glPushMatrix();
     glMatrixMode(GL_PROJECTION);
-    fz = std::sqrt(x*x+y*y);
-    theta = asin(fz/sqrt(2)) + alpha;
-    phi = asin(fz/sqrt(2-fz*fz)) + beta;
-    GLfloat transMatrix2[] = {
+    glMultMatrixf(trans2);
+    GLfloat rotX2[] = {
             1, 0, 0, 0,
-            0, 1, 0,0,
-            0, 0, 1, 0,
-            0.5, 0.5, 0, 1
+            0, cos(0.7f), -sin(0.7f), 0,
+            0, sin(0.7f), cos(0.7f), 0,
+            0, 0, 0, 1
     };
-    glMultMatrixf(transMatrix2);
-    cube(0.2);
+    GLfloat rotY2[] = {
+            cos(0.7f), 0, sin(0.7f), 0,
+            0, 1, 0, 0,
+            -sin(0.7f), 0, cos(0.7f), 0,
+            0, 0, 0, 1
+    };
+    glMultMatrixf(rotX2);
+    glMultMatrixf(rotY2);
+    draw_cube(0.3);
+    glPopMatrix();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
