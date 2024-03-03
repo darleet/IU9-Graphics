@@ -14,6 +14,8 @@ float fz = 0;
 const float x = 0.7;
 const float y = 0.7;
 
+using std::sin, std::cos;
+
 int main() {
     if (!glfwInit()) {
         return 1;
@@ -65,10 +67,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 GLfloat projMatrix[] = {
-        0.87, 0, 0.5, 0,
-        -0.09, 0.98, 0.15, 0,
-        0.98, 0.35, -1.7, 1,
-        0.49, 0.17, -0.85, 2
+        1, 0, 0, 0.8,
+        0, 1, 0, 0.8,
+        0, 0, 1, 1.5,
+        0, 0, 0, 1
 };
 
 void cube(float p) {
@@ -112,24 +114,47 @@ void display(GLFWwindow* window) {
     glMatrixMode(GL_PROJECTION);
 
     glLoadIdentity();
-    glViewport(0, 0, width/2, height/2);
-    glMultMatrixf(projMatrix);
+    glPushMatrix();
+    glMatrixMode(GL_PROJECTION);
+
     GLfloat transMatrix[] = {
-            std::cos(phi), std::sin(phi)*std::sin(theta), std::sin(theta)*std::cos(theta), 0,
-            0, std::cos(theta), -std::sin(theta), 0,
-            std::sin(phi), -std::cos(phi)*std::sin(theta), -std::cos(phi)*std::cos(theta), 0,
-            0, 0, 0, 1
+            1, 0, 0, 0,
+            0, 1, 0,0,
+            0, 0, 1, 0,
+            -0.5, -0.5, 0, 1
     };
     glMultMatrixf(transMatrix);
-    cube(1);
+    glMultMatrixf(projMatrix);
+    GLfloat rotX[] = {
+            1, 0, 0, 0,
+            0, cos(alpha), -sin(alpha), 0,
+            0, sin(alpha), cos(alpha), 0,
+            0, 0, 0, 1
+    };
+    GLfloat rotY[] = {
+            cos(beta), 0, sin(beta), 0,
+            0, 1, 0, 0,
+            -sin(beta), 0, cos(beta), 0,
+            0, 0, 0, 1
+    };
+    glMultMatrixf(rotX);
+    glMultMatrixf(rotY);
+    cube(0.2);
+    glPopMatrix();
 
-    glViewport(width/2, height/2, width/2, height/2);
-    glLoadIdentity();
+    glPushMatrix();
+    glMatrixMode(GL_PROJECTION);
     fz = std::sqrt(x*x+y*y);
     theta = asin(fz/sqrt(2)) + alpha;
     phi = asin(fz/sqrt(2-fz*fz)) + beta;
-    glMultMatrixf(transMatrix);
-    cube(1);
+    GLfloat transMatrix2[] = {
+            1, 0, 0, 0,
+            0, 1, 0,0,
+            0, 0, 1, 0,
+            0.5, 0.5, 0, 1
+    };
+    glMultMatrixf(transMatrix2);
+    cube(0.2);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
