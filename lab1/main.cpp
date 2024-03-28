@@ -16,10 +16,10 @@ int main() {
     }
     
     glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, key_callback);
+  glfwSetKeyCallback(window, KeyCallback);
 
     while(!glfwWindowShouldClose(window)) {
-        display(window);
+      DisplayWindow(window);
     }
 
     glfwDestroyWindow(window);
@@ -28,7 +28,7 @@ int main() {
     return 0;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_RIGHT) {
             angle -= 15;
@@ -43,7 +43,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-void display(GLFWwindow* window) {
+void DisplayWindow(GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
     glClearColor(0.0, 0.0, 0.0, 1.0);

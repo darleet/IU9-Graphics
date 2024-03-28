@@ -15,7 +15,7 @@ void DrawEllipsoid(int sector_count, int stack_count) {
   float stack_step = M_PI / stack_count;
   float alpha, beta, next_alpha, next_beta;
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(3.0f);
   for(int i = 0; i <= stack_count; ++i)
   {
@@ -70,7 +70,7 @@ void DisplayWindow(GLFWwindow* window) {
   glMultMatrixf(rotate_x);
   glMultMatrixf(rotate_y);
 
-  DrawEllipsoid(100, 50);
+  DrawEllipsoid(50, 15);
 
   glPopMatrix();
   glFlush();

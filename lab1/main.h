@@ -5,7 +5,7 @@
 #include "GLFW/glfw3.h"
 
 int main();
-void key_callback(GLFWwindow*, int, int, int, int);
-void display(GLFWwindow*);
+void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void DisplayWindow(GLFWwindow *window);
 
 #endif //PROGRAM_MAIN_H
