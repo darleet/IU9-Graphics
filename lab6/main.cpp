@@ -12,8 +12,8 @@ int anglex = 0;
 int angley = 0;
 
 float delta_y = 0;
-bool Falling = false;
-bool Jump = false;
+bool is_falling = false;
+bool is_jumping = false;
 float current_vel = 0;
 bool tex = true;
 
@@ -26,27 +26,27 @@ void ViewCube(){
   auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin_ti);
   auto full_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin_time);
 
-  if (Falling and delta_y < -0.7) {
-    Jump = true;
-    Falling = false;
+  if (is_falling and delta_y < -0.7) {
+      is_jumping = true;
+      is_falling = false;
     begin_time = std::chrono::steady_clock::now();
     end = std::chrono::steady_clock::now();
     full_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin_time);
   }
 
-  if (Jump and delta_y > 0) {
-    Falling = true;
-    Jump = false;
+  if (is_jumping and delta_y > 0) {
+      is_falling = true;
+      is_jumping = false;
     begin_time = std::chrono::steady_clock::now();
     end = std::chrono::steady_clock::now();
     full_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin_time);
   }
 
-  if (Falling and elapsed_ms > std::chrono::milliseconds(1)) {
+  if (is_falling and elapsed_ms > std::chrono::milliseconds(1)) {
     begin_ti = end;
     delta_y = -9.8 * pow((full_ms.count() / 1000.0), 2) / 2;
     current_vel = 9.8 * (full_ms.count() / 1000.0);
-  } else if (Jump and elapsed_ms > std::chrono::milliseconds(10)) {
+  } else if (is_jumping and elapsed_ms > std::chrono::milliseconds(10)) {
     begin_ti = end;
     delta_y = current_vel * (full_ms.count() / 1000.0) -0.7 - 9.8 * pow((full_ms.count() / 1000.0), 2) / 2;
   }
@@ -265,11 +265,11 @@ void CallbackKeys(GLFWwindow* window, int key, int scancode, int action, int mod
       anglex += 6;
     }
     if (key == GLFW_KEY_LEFT_CONTROL) {
-      if (Jump) {
-        Jump = false;
+      if (is_jumping) {
+          is_jumping = false;
         delta_y = 0;
       } else {
-        Falling = !Falling;
+          is_falling = !is_falling;
       }
       begin_ti = std::chrono::steady_clock::now();
       begin_time = std::chrono::steady_clock::now();
@@ -280,8 +280,8 @@ void CallbackKeys(GLFWwindow* window, int key, int scancode, int action, int mod
       anglex = 0;
       angley = 0;
       delta_y = 0;
-      Falling = false;
-      Jump = false;
+        is_falling = false;
+        is_jumping = false;
       current_vel = 0;
     }
 
