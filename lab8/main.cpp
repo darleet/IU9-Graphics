@@ -63,13 +63,15 @@ void checkCompileErrors(GLuint shader, std::string type) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
       glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "| ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+      std::cout << "| ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog <<
+      "\n -- --------------------------------------------------- -- " << std::endl;
     }
   } else {
     glGetProgramiv(shader, GL_LINK_STATUS, &success);
     if (!success) {
       glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "| ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+      std::cout << "| ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog <<
+      "\n -- --------------------------------------------------- -- " << std::endl;
     }
   }
 }
@@ -83,17 +85,17 @@ GLuint LoadBMP(const char* image) {
 
   FILE* file = fopen(image, "rb");
   if (!file) {
-    std::cout << "Файл не найден" << std::endl;
+    std::cout << "BMP file not found" << std::endl;
     return 0;
   }
 
   if (fread(header, 1, 54, file) != 54) {
-    std::cout << "Некорректный BMP-файл" << std::endl;
+    std::cout << "Incorrect BMP file" << std::endl;
     return 0;
   }
 
   if (header[0] != 'B' || header[1] != 'M') {
-    std::cout << "Некорректный BMP-файл" << std::endl;
+    std::cout << "Incorrect BMP file" << std::endl;
     return 0;
   }
 
@@ -109,7 +111,8 @@ GLuint LoadBMP(const char* image) {
   GLuint textureID;
   glGenTextures(1, &textureID);
   glBindTexture(GL_TEXTURE_2D, textureID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR,
+               GL_UNSIGNED_BYTE, data);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -203,10 +206,12 @@ void ViewCube() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                        (void*)nullptr);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                        (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(VAO);
@@ -224,16 +229,17 @@ void DisplayWindow(GLFWwindow* window) {
 
   glUseProgram(shaderProgram);
 
-  glm::mat4 model = glm::mat4(1.0f);
+  auto model = glm::mat4(1.0f);
   model = glm::rotate(model, glm::radians((float)anglex), glm::vec3(1.0f, 0.0f, 0.0f));
   model = glm::rotate(model, glm::radians((float)angley), glm::vec3(0.0f, 1.0f, 0.0f));
   model = glm::rotate(model, glm::radians((float)anglez), glm::vec3(0.0f, 0.0f, 1.0f));
 
-  glm::mat4 view = glm::mat4(1.0f);
+  auto view = glm::mat4(1.0f);
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
 
-  glm::mat4 projection = glm::mat4(1.0f);
-  projection = glm::perspective(glm::radians(45.0f), (float)window_width / (float)window_height, 0.1f, 100.0f);
+  auto projection = glm::mat4(1.0f);
+  projection = glm::perspective(glm::radians(45.0f), (float)window_width / (
+      float)window_height, 0.1f, 100.0f);
 
   GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
   GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
@@ -328,7 +334,8 @@ int main() {
     return 1;
   }
 
-  GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Lab 6", nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Lab 6",
+                                        nullptr, nullptr);
   if (window == nullptr) {
     glfwTerminate();
     return 1;
